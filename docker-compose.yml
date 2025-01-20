@@ -11,6 +11,8 @@ services:
             - GATEWAY_PORT=3000
         depends_on:
             - user-service
+        volumes:
+            - ./gateway:/app
         networks:
             - app-network
 
@@ -27,6 +29,8 @@ services:
             - NODE_ENV=development
             - DATABASE_URL=${USERS_DB_URL}
             - RABBITMQ_URL=${RABBITMQ_URL}
+        volumes:
+            - ./user-service:/app
         networks:
             - app-network
 
