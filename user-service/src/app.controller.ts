@@ -1,12 +1,39 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
+import { EventPattern, MessagePattern } from '@nestjs/microservices';
+import { UserEntity } from 'src/entities/user.entity';
+import { CreateUserDto } from 'src/dto/create-user.dto';
+import { plainToInstance } from 'class-transformer';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @MessagePattern('find-all-users')
+  async findAllUsers(): Promise<UserEntity[]> {
+    const users = await this.appService.findAllUsers();
+    return users.map((user) => plainToInstance(UserEntity, user));
+  }
+
+  @MessagePattern('find-user-by-id')
+  async findUserById(id: number): Promise<UserEntity> {
+    const user = await this.appService.findUserById(id);
+    return plainToInstance(UserEntity, user);
+  }
+
+  @EventPattern('create-user')
+  async createUser(createUserDto: CreateUserDto): Promise<void> {
+    await this.appService.createUser(createUserDto);
+  }
+
+  @MessagePattern('update-user')
+  async updateUser(id: number, updateUserDto: UserEntity): Promise<UserEntity> {
+    const user = await this.appService.updateUser(id, updateUserDto);
+    return plainToInstance(UserEntity, user);
+  }
+
+  @EventPattern('delete-user')
+  async deleteUser(id: number): Promise<void> {
+    await this.appService.deleteUser(id);
   }
 }
