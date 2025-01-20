@@ -1,0 +1,61 @@
+services:
+    gateway:
+        container_name: gateway
+        build:
+            context: ./gateway
+            dockerfile: Dockerfile
+        ports:
+            - "3000:3000"
+        environment:
+            - NODE_ENV=development
+            - GATEWAY_PORT=3000
+        depends_on:
+            - user-service
+        networks:
+            - app-network
+
+    user-service:
+        container_name: user-service
+        build:
+            context: ./user-service
+            dockerfile: Dockerfile
+        ports:
+            - "3001:3000"
+        depends_on:
+            - users_db
+        environment:
+            - NODE_ENV=development
+            - DATABASE_URL=${USERS_DB_URL}
+            - RABBITMQ_URL=${RABBITMQ_URL}
+        networks:
+            - app-network
+
+    users_db:
+        container_name: users_db
+        image: mysql:8.0
+        restart: always
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: ${USERS_DB_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${USERS_DB_NAME}
+            MYSQL_USER: ${USERS_DB_USER}
+            MYSQL_PASSWORD: ${USERS_DB_PASSWORD}
+        networks:
+            - app-network
+
+    rabbitmq:
+        image: rabbitmq:3-management
+        container_name: rabbitmq
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        environment:
+            RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+        networks:
+            - app-network
+
+networks:
+    app-network:
+        driver: bridge
