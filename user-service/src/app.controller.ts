@@ -4,6 +4,7 @@ import { EventPattern, MessagePattern } from '@nestjs/microservices';
 import { UserEntity } from 'src/entities/user.entity';
 import { CreateUserDto } from 'src/dto/create-user.dto';
 import { plainToInstance } from 'class-transformer';
+import { SignInUserEntity } from './entities/sign-in-user.entity';
 
 @Controller()
 export class AppController {
@@ -35,5 +36,11 @@ export class AppController {
   @EventPattern('delete-user')
   async deleteUser(id: number): Promise<void> {
     await this.appService.deleteUser(id);
+  }
+
+  @MessagePattern('find-user-by-email')
+  async findUserByEmail(email: string): Promise<SignInUserEntity> {
+    const user = await this.appService.findUserByEmail(email);
+    return plainToInstance(SignInUserEntity, user);
   }
 }
