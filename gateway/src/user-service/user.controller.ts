@@ -14,7 +14,7 @@ import { CreateUserDto } from './user_model/create-user.dto';
 import { UpdateUserDto } from './user_model/update-user.dto';
 
 @Controller()
-export class AppController {
+export class UserController {
   constructor(@Inject('USER_SERVICE') private rabbitmqClient: ClientProxy) {}
 
   @Get('users')
