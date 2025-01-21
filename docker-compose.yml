@@ -34,6 +34,25 @@ services:
         networks:
             - app-network
 
+    auth-service:
+        container_name: auth-service
+        build:
+            context: ./auth-service
+            dockerfile: Dockerfile
+        ports:
+            - "3002:3000"
+        depends_on:
+            - users_db
+            - rabbitmq
+        environment:
+            - NODE_ENV=development
+            - DATABASE_URL=${USERS_DB_URL}
+            - RABBITMQ_URL=${RABBITMQ_URL}
+        volumes:
+            - ./auth-service:/app
+        networks:
+            - app-network
+
     users_db:
         container_name: users_db
         image: mysql:8.0
