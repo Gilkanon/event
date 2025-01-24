@@ -13,14 +13,14 @@ import { JwtModule } from '@nestjs/jwt';
         name: 'USER_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: [process.env.RABBITMQ_URL],
+          urls: [String(process.env.RABBITMQ_URL)],
           queue: 'user_queue',
         },
       },
     ]),
     JwtModule.register({
       global: true,
-      secret: process.env.JWT_SECRET,
+      secret: String(process.env.JWT_SECRET),
       signOptions: { expiresIn: '1d' },
     }),
   ],

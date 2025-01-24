@@ -4,10 +4,21 @@ enum Role {
 }
 
 export class UserEntity {
+  constructor(partial: Partial<UserEntity>) {
+    Object.assign(this, partial);
+  }
+
   id: number;
+
+  name: string;
+
   email: string;
+
   password: string;
+
   role: Role;
-  created_at: Date;
-  updated_at: Date;
+
+  createdAt: Date;
+
+  updatedAt: Date;
 }

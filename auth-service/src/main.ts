@@ -6,8 +6,10 @@ async function bootstrap() {
   const app = await NestFactory.createMicroservice(AppModule, {
     transport: Transport.RMQ,
     options: {
-      urls: [process.env.RABBITMQ_URL],
+      urls: [String(process.env.RABBITMQ_URL)],
       queue: 'auth_queue',
+      retryAttempts: 5,
+      retryDelay: 3000,
     },
   });
   await app.listen();
