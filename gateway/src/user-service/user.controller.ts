@@ -15,21 +15,26 @@ import { UpdateUserDto } from './user_model/update-user.dto';
 
 @Controller()
 export class UserController {
-  constructor(@Inject('USER_SERVICE') private rabbitmqClient: ClientProxy) {}
+  constructor(@Inject('USER_SERVICE') private userClient: ClientProxy) {}
+
+  @Post('users/email/')
+  async findUserByEmail(@Body() data) {
+    return this.userClient.send('find-user-by-email', data);
+  }
 
   @Get('users')
   async findAllUsers() {
-    return this.rabbitmqClient.send('find-all-users', {});
+    return this.userClient.send('find-all-users', {});
   }
 
   @Get('users/:id')
   async findUserById(@Param('id', ParseIntPipe) id: number) {
-    return this.rabbitmqClient.send('find-user-by-id', id);
+    return this.userClient.send('find-user-by-id', id);
   }
 
   @Post('users/create')
   async createUser(@Body() createUserDto: CreateUserDto) {
-    return this.rabbitmqClient.emit('create-user', createUserDto);
+    return this.userClient.emit('create-user', createUserDto);
   }
 
   @Patch('users/update/:id')
@@ -37,11 +42,11 @@ export class UserController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    return this.rabbitmqClient.send('update-user', { id, updateUserDto });
+    return this.userClient.send('update-user', { id, updateUserDto });
   }
 
   @Delete('users/delete/:id')
   async deleteUser(@Param('id', ParseIntPipe) id: number) {
-    return this.rabbitmqClient.emit('delete-user', id);
+    return this.userClient.emit('delete-user', id);
   }
 }

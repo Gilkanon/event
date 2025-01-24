@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { UserController } from './user-service/user.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule } from '@nestjs/config';
+import { AuthController } from './auth-service/auth.controller';
 
 @Module({
   imports: [
@@ -17,8 +18,6 @@ import { ConfigModule } from '@nestjs/config';
           queue: 'user_queue',
         },
       },
-    ]),
-    ClientsModule.register([
       {
         name: 'AUTH_SERVICE',
         transport: Transport.RMQ,
@@ -29,7 +28,7 @@ import { ConfigModule } from '@nestjs/config';
       },
     ]),
   ],
-  controllers: [UserController],
+  controllers: [UserController, AuthController],
   providers: [],
 })
 export class AppModule {}
