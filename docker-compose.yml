@@ -7,12 +7,14 @@ services:
         ports:
             - "3000:3000"
         environment:
-            - NODE_ENV=development
-            - GATEWAY_PORT=3000
+            NODE_ENV: development
+            GATEWAY_PORT: 3000
         depends_on:
             - user-service
+            - auth-service
         volumes:
             - ./gateway:/app
+            - /app/node_modules
         networks:
             - app-network
 
@@ -25,12 +27,14 @@ services:
             - "3001:3000"
         depends_on:
             - users_db
+            - rabbitmq
         environment:
-            - NODE_ENV=development
-            - DATABASE_URL=${USERS_DB_URL}
-            - RABBITMQ_URL=${RABBITMQ_URL}
+            NODE_ENV: development
+            DATABASE_URL: ${USERS_DB_URL}
+            RABBITMQ_URL: ${RABBITMQ_URL}
         volumes:
             - ./user-service:/app
+            - /app/node_modules
         networks:
             - app-network
 
@@ -42,14 +46,13 @@ services:
         ports:
             - "3002:3000"
         depends_on:
-            - users_db
             - rabbitmq
         environment:
-            - NODE_ENV=development
-            - DATABASE_URL=${USERS_DB_URL}
-            - RABBITMQ_URL=${RABBITMQ_URL}
+            NODE_ENV: development
+            RABBITMQ_URL: ${RABBITMQ_URL}
         volumes:
             - ./auth-service:/app
+            - /app/node_modules
         networks:
             - app-network
 
