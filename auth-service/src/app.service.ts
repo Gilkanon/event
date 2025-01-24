@@ -13,14 +13,10 @@ export class AppService {
   ) {}
 
   async signIn(data: any) {
-    console.log(data);
     const { email, password } = data;
-    console.log('email:', email);
-    console.log('password:', password);
     const user = await firstValueFrom(
       this.userClient.send('find-user-by-email', email),
     );
-    console.log(user);
     const isValidPassword = await bcrypt.compare(password, user.password);
 
     if (!isValidPassword) {

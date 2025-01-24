@@ -9,9 +9,7 @@ export class AuthController {
 
   @Post('auth/sign-in')
   async signIn(@Body() data) {
-    console.log(data);
     const signInDto = plainToInstance(SignInDto, data);
-    console.log(signInDto);
     return this.authClient.send('sign-in', signInDto);
   }
 }

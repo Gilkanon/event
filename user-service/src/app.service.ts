@@ -21,7 +21,6 @@ export class AppService {
     if (!user) {
       throw new NotFoundException(`User with email ${email} not found`);
     }
-    console.log(user);
     return user;
   }
 

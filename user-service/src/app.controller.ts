@@ -40,7 +40,6 @@ export class AppController {
 
   @MessagePattern('find-user-by-email')
   async findUserByEmail(@Payload() data): Promise<SignInUserEntity> {
-    console.log(data);
     const user = await this.appService.findUserByEmail(data);
     return plainToInstance(SignInUserEntity, user);
   }
