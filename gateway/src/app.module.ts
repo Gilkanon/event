@@ -3,6 +3,8 @@ import { UserController } from './user-service/user.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule } from '@nestjs/config';
 import { AuthController } from './auth-service/auth.controller';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './auth/jwt.strategy';
 
 @Module({
   imports: [
@@ -27,8 +29,12 @@ import { AuthController } from './auth-service/auth.controller';
         },
       },
     ]),
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: {},
+    }),
   ],
   controllers: [UserController, AuthController],
-  providers: [],
+  providers: [JwtStrategy],
 })
 export class AppModule {}
