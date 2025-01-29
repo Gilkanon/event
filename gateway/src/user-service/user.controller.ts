@@ -39,11 +39,6 @@ export class UserController {
     return this.userClient.send('find-user-by-id', id);
   }
 
-  @Post('users/create')
-  async createUser(@Body() createUserDto: CreateUserDto) {
-    return this.userClient.emit('create-user', createUserDto);
-  }
-
   @UseGuards(JwtAuthGuard)
   @Patch('users/update/:id')
   async updateUser(

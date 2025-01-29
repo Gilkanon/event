@@ -31,7 +31,7 @@ import { JwtStrategy } from './auth/jwt.strategy';
     ]),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
-      signOptions: {},
+      signOptions: { expiresIn: '15m' },
     }),
   ],
   controllers: [UserController, AuthController],
