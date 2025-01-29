@@ -22,9 +22,10 @@ export class AppController {
     return plainToInstance(UserEntity, user);
   }
 
-  @EventPattern('create-user')
-  async createUser(createUserDto: CreateUserDto): Promise<void> {
-    await this.appService.createUser(createUserDto);
+  @MessagePattern('create-user')
+  async createUser(createUserDto: CreateUserDto) {
+    const user = await this.appService.createUser(createUserDto);
+    return plainToInstance(UserEntity, user);
   }
 
   @MessagePattern('update-user')
