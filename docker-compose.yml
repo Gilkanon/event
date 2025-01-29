@@ -49,6 +49,7 @@ services:
             - rabbitmq
         environment:
             NODE_ENV: development
+            DATABASE_URL: ${AUTH_DB_URL}
             RABBITMQ_URL: ${RABBITMQ_URL}
         volumes:
             - ./auth-service:/app
@@ -67,6 +68,20 @@ services:
             MYSQL_DATABASE: ${USERS_DB_NAME}
             MYSQL_USER: ${USERS_DB_USER}
             MYSQL_PASSWORD: ${USERS_DB_PASSWORD}
+        networks:
+            - app-network
+
+    auth_db:
+        container_name: auth_db
+        image: mysql:8.0
+        restart: always
+        ports:
+            - "3307:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: ${AUTH_DB_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${AUTH_DB_NAME}
+            MYSQL_USER: ${AUTH_DB_USER}
+            MYSQL_PASSWORD: ${AUTH_DB_PASSWORD}
         networks:
             - app-network
 
