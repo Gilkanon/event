@@ -33,7 +33,7 @@ export class AppService {
       this.userClient.send('create-user', user),
     );
 
-    return newUser;
+    return this.signIn(user);
   }
 
   async signIn(data: SignInDto) {
