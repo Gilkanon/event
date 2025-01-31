@@ -57,6 +57,25 @@ services:
         networks:
             - app-network
 
+    event-service:
+        container_name: event-service
+        build:
+            context: ./event-service
+            dockerfile: Dockerfile
+        ports:
+            - "3003:3000"
+        depends_on:
+            - rabbitmq
+        environment:
+            NODE_ENV: development
+            DATABASE_URL: ${EVENT_DB_URL}
+            RABBITMQ_URL: ${RABBITMQ_URL}
+        volumes:
+            - ./event-service:/app
+            - /app/node_modules
+        networks:
+            - app-network
+
     users_db:
         container_name: users_db
         image: mysql:8.0
@@ -82,6 +101,20 @@ services:
             MYSQL_DATABASE: ${AUTH_DB_NAME}
             MYSQL_USER: ${AUTH_DB_USER}
             MYSQL_PASSWORD: ${AUTH_DB_PASSWORD}
+        networks:
+            - app-network
+
+    event_db:
+        container_name: event_db
+        image: mysql:8.0
+        restart: always
+        ports:
+            - "3308:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: $EVENT_DB_ROOT_PASSWORD}
+            MYSQL_DATABASE: $EVENT_DB_NAME}
+            MYSQL_USER: $EVENT_DB_USER}
+            MYSQL_PASSWORD: $EVENT_DB_PASSWORD}
         networks:
             - app-network
 
