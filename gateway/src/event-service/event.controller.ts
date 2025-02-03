@@ -8,11 +8,14 @@ import {
   ParseEnumPipe,
   ParseIntPipe,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { EventCategory } from './enums/event-category.enum';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
+import { Roles } from 'src/decorators/roles.decorator';
 
 @Controller()
 export class EventController {
@@ -51,11 +54,13 @@ export class EventController {
     return this.eventClient.send('find-events-by-title', title);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('events/create')
   async createEvent(@Body() createEventDto: CreateEventDto) {
     return this.eventClient.send('create-event', createEventDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('events/update/:id')
   async updateEvent(
     @Param('id', ParseIntPipe) id: number,
@@ -64,6 +69,8 @@ export class EventController {
     return this.eventClient.send('update-event', { id, updateEventDto });
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
   @Delete('events/delete/:id')
   async deleteEvent(@Param('id', ParseIntPipe) id: number) {
     return this.eventClient.emit('remove-event', id);
