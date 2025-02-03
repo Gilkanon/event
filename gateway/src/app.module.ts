@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthController } from './auth-service/auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './auth/jwt.strategy';
+import { EventController } from './event-service/event.controller';
 
 @Module({
   imports: [
@@ -28,13 +29,21 @@ import { JwtStrategy } from './auth/jwt.strategy';
           queue: 'auth_queue',
         },
       },
+      {
+        name: 'EVENT_SERVICE',
+        transport: Transport.RMQ,
+        options: {
+          urls: [String(process.env.RABBITMQ_URL)],
+          queue: 'event_queue',
+        },
+      },
     ]),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '15m' },
     }),
   ],
-  controllers: [UserController, AuthController],
+  controllers: [UserController, AuthController, EventController],
   providers: [JwtStrategy],
 })
 export class AppModule {}
