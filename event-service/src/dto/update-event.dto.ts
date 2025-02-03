@@ -1,4 +1,4 @@
-import { EventCategory } from '@prisma/client';
+import { EventCategory, EventStatus } from '@prisma/client';
 import {
   IsDate,
   IsEnum,
@@ -25,6 +25,10 @@ export class UpdateEventDto {
   category: EventCategory;
 
   @IsOptional()
+  @IsEnum(EventStatus)
+  status: EventStatus;
+
+  @IsOptional()
   @IsDate()
   date: Date;
 
@@ -40,4 +44,8 @@ export class UpdateEventDto {
   @IsOptional()
   @IsUrl()
   imageUrl: string;
+
+  @IsOptional()
+  @IsUrl()
+  videoUrl: string;
 }

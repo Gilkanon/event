@@ -18,13 +18,14 @@ model Event {
   title String
   description String
   category EventCategory @default(OTHER)
-  status EventStatus
+  status EventStatus @default(ACTIVE)
   date DateTime
   location String
   createdBy Int // ID of the user who created the event
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   imageUrl String?
+  videoUrl String?
   subscriptions Subscription[]
 }
 
