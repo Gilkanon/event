@@ -10,7 +10,7 @@ export class UserEntity {
 
   id: number;
 
-  name: string;
+  name?: string;
 
   email: string;
 
