@@ -10,15 +10,15 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   @MaxLength(50)
-  name: string;
+  name?: string;
 
   @IsOptional()
   @IsEmail()
   @MaxLength(50)
-  email: string;
+  email?: string;
 
   @IsOptional()
   @IsString()
   @Length(8, 32)
-  password: string;
+  password?: string;
 }

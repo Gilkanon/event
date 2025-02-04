@@ -7,7 +7,7 @@ export class SignInUserEntity implements User {
 
   id: number;
 
-  name: string;
+  name: string | null;
 
   email: string;
 

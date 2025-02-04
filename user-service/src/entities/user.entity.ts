@@ -8,7 +8,7 @@ export class UserEntity implements User {
 
   id: number;
 
-  name: string;
+  name: string | null;
 
   email: string;
 
