@@ -24,11 +24,11 @@ export class CreateEventDto {
 
   @IsOptional()
   @IsEnum(EventCategory)
-  category: EventCategory;
+  category?: EventCategory;
 
   @IsOptional()
   @IsEnum(EventStatus)
-  status: EventStatus;
+  status?: EventStatus;
 
   @IsNotEmpty()
   @IsDate()
@@ -45,9 +45,9 @@ export class CreateEventDto {
 
   @IsOptional()
   @IsUrl()
-  imageUrl: string;
+  imageUrl?: string;
 
   @IsOptional()
   @IsUrl()
-  videoUrl: string;
+  videoUrl?: string;
 }
