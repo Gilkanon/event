@@ -30,7 +30,7 @@ export class AppService {
   }
 
   async findEventsByCategory(category: EventCategory) {
-    return this.prisma.event.findMany({ where: { category } });
+    return this.prisma.event.findMany({ where: { category: category } });
   }
 
   async findEventsByLocation(location: string) {

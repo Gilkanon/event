@@ -5,8 +5,10 @@ import { Transport } from '@nestjs/microservices';
 async function bootstrap() {
   const app = await NestFactory.createMicroservice(AppModule, {
     transport: Transport.RMQ,
-    urls: [String(process.env.RABBITMQ_URL)],
-    queue: 'event_queue',
+    options: {
+      urls: [String(process.env.RABBITMQ_URL)],
+      queue: 'event_queue',
+    },
   });
   await app.listen();
 }

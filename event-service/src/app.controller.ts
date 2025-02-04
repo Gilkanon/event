@@ -1,15 +1,19 @@
 import { Controller } from '@nestjs/common';
 import { AppService } from './app.service';
-import { EventPattern, MessagePattern } from '@nestjs/microservices';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { EventCategory } from '@prisma/client';
 import { CreateEventDto } from './dto/create-event.dto';
 import { plainToInstance } from 'class-transformer';
 import { EventEntity } from './entities/event.entity';
 import { UpdateEventDto } from './dto/update-event.dto';
+import { S3Service } from './s3/s3.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly s3Service: S3Service,
+  ) {}
 
   @MessagePattern('find-all-events')
   async findAllEvents(): Promise<EventEntity[]> {
@@ -19,7 +23,7 @@ export class AppController {
 
   @MessagePattern('find-active-events')
   async findAllActiveEvents(): Promise<EventEntity[]> {
-    const events = await this.findAllActiveEvents();
+    const events = await this.appService.findAllActiveEvents();
     return events.map((event) => plainToInstance(EventEntity, event));
   }
 
@@ -40,7 +44,7 @@ export class AppController {
     return events.map((event) => plainToInstance(EventEntity, event));
   }
 
-  @MessagePattern('finds-events-by-location')
+  @MessagePattern('find-events-by-location')
   async findEventsByLocation(location: string): Promise<EventEntity[]> {
     const events = await this.appService.findEventsByLocation(location);
     return events.map((event) => plainToInstance(EventEntity, event));
@@ -50,6 +54,17 @@ export class AppController {
   async findEventsByTitle(title: string): Promise<EventEntity[]> {
     const events = await this.appService.findEventsByTitle(title);
     return events.map((event) => plainToInstance(EventEntity, event));
+  }
+
+  @MessagePattern('upload-event-image')
+  async uploadImage(
+    @Payload() file: { buffer: Buffer; originalName: string; mimeType: string },
+  ): Promise<string> {
+    return this.s3Service.uploadFile(
+      file.buffer,
+      file.originalName,
+      file.mimeType,
+    );
   }
 
   @MessagePattern('create-event')
